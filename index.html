@@ -1,0 +1,30 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Keyboard Test</title>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    </head>
+    <body>
+        <form action="index.html" method="GET">
+            {% assign key_names = "A,B,C,D,E,F,G" | split: "," %}
+
+            {% for n in (2..6) %}
+            <div id="part-{{ n }}" style="background-color: #8585ff">
+                    {% for key_name in key_names %}
+                    <div class="white_key">
+                        <input type="checkbox" value="{{ key_name }}{{ n }}" name="keys[]" id="{{ key_name }}{{ n }}"></input><label for="{{ key_name }}{{ n }}" >{% if key_name == 'C' %}C{{ n }}{% endif %}</label>
+                    </div>
+                    {% endfor %}
+                    // TODO: make 5 and position them based on site.key_width 
+                    <div class="black_key">
+                        <input type="checkbox" value="1" name="a1" id="a1"></input><label for="a1" ></label>
+                    </div>
+            </div>
+            {% endfor %}
+            <button action="submit">OK</button>
+        </form>
+    </body>
+</html>

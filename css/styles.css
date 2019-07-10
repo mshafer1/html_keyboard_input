@@ -1,0 +1,24 @@
+---
+---
+
+body {
+	background: #555;
+}
+
+h1 {
+	color: #eee;
+	font: 30px Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 0px 1px black;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+input[type=checkbox] {
+	visibility: hidden;
+}
+
+{% include key.css key_name="black_key" key_width=site.key_width key_height=site.black_height color=222 hover_color="a011" %}
+
+{% include key.css key_name="white_key" key_width=site.key_width key_height=site.white_height color="d0d0c0" hover_color="c0c0a0" checked_color="a0a080" %}
+
