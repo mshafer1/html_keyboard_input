@@ -9,18 +9,29 @@
     </head>
     <body>
         <form action="index.html" method="GET">
-            {% assign key_names = "A,B,C,D,E,F,G" | split: "," %}
+            {% assign key_names = "C,D,E,F,G,A,B" | split: "," %}
+            {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
 
             {% for n in (2..6) %}
-            <div id="part-{{ n }}" style="background-color: #8585ff">
+            <div id="part-{{ n }}" style="background-color: #8585ff; position: relative;">
                     {% for key_name in key_names %}
                     <div class="white_key">
                         <input type="checkbox" value="{{ key_name }}{{ n }}" name="keys[]" id="{{ key_name }}{{ n }}"></input><label for="{{ key_name }}{{ n }}" >{% if key_name == 'C' %}C{{ n }}{% endif %}</label>
                     </div>
                     {% endfor %}
-                    // TODO: make 5 and position them based on site.key_width 
-                    <div class="black_key">
-                        <input type="checkbox" value="1" name="a1" id="a1"></input><label for="a1" ></label>
+
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
+                            {% for key_name in alt_keys %}
+                            {% assign left=0 %}
+                            {% if key_name == 'C#' %}
+                                {% assign left=0.5 %}
+                            {% elsif key_name == 'F#' %}
+                                {% assign left=1.0 %}
+                            {% endif %}
+                            <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
+                                <input type="checkbox" value="{{ key_name }}{{ n }}" name="keys[]" id="{{ key_name }}{{ n }}"></input><label for="{{ key_name }}{{ n }}" ></label>
+                            </div>
+                            {% endfor %}
                     </div>
             </div>
             {% endfor %}
