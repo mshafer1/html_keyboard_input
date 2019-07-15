@@ -20,13 +20,13 @@ hover_color
 	margin: 20px auto;
 
 
-	-webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-	-moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-	box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
+	-moz-box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
+	box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
 
-	-webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-	-moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-	box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
+	-moz-box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
+	box-shadow: inset 0px 4px 4px white, 0px 4px 5px rgba(0,0,0,0.5);
 	position: relative;
 }
 
@@ -39,12 +39,12 @@ hover_color
 	left: 1px;
 	top: 0px;
 
-	background: -webkit-linear-gradient(top, #{{ include.color }} 0%, #45484d 100%);
-	background: -moz-linear-gradient(top, #{{ include.color }} 0%, #45484d 100%);
-	background: -o-linear-gradient(top, #{{ include.color }} 0%, #45484d 100%);
-	background: -ms-linear-gradient(top, #{{ include.color }} 0%, #45484d 100%);
-	background: linear-gradient(top, #{{ include.color }} 0%, #45484d 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{{ include.color }}', endColorstr='#45484d',GradientType=0 );
+	background: -webkit-linear-gradient(top, #{{ include.color }} 0%, #{{ include.fade_color }} 100%);
+	background: -moz-linear-gradient(top, #{{ include.color }} 0%, #{{ include.fade_color }} 100%);
+	background: -o-linear-gradient(top, #{{ include.color }} 0%, #{{ include.fade_color }} 100%);
+	background: -ms-linear-gradient(top, #{{ include.color }} 0%, #{{ include.fade_color }} 100%);
+	background: linear-gradient(top, #{{ include.color }} 0%, #{{ include.fade_color }} 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{{ include.color }}', endColorstr='#{{ include.fade_color }}',GradientType=0 );
 }
 
 .{{ include.key_name }} label:after {
@@ -58,12 +58,12 @@ hover_color
 	background: #{{ include.hover_color }};
 
     /* check color */
-	background: -webkit-linear-gradient(top, #45484d 0%, #{{ include.hover_color }} 100%);
-	background: -moz-linear-gradient(top, #45484d 0%, #{{ include.hover_color }} 100%);
-	background: -o-linear-gradient(top, #45484d 0%, #{{ include.hover_color }} 100%);
-	background: -ms-linear-gradient(top, #45484d 0%, #{{ include.hover_color }} 100%);
-	background: linear-gradient(top, #45484d 0%, #{{ include.hover_color }} 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#{{ include.hover_color }}',GradientType=0 );
+	background: -webkit-linear-gradient(top, #{{ include.fade_color }} 0%, #{{ include.hover_color }} 100%);
+	background: -moz-linear-gradient(top, #{{ include.fade_color }} 0%, #{{ include.hover_color }} 100%);
+	background: -o-linear-gradient(top, #{{ include.fade_color }} 0%, #{{ include.hover_color }} 100%);
+	background: -ms-linear-gradient(top, #{{ include.fade_color }} 0%, #{{ include.hover_color }} 100%);
+	background: linear-gradient(top, #{{ include.fade_color }} 0%, #{{ include.hover_color }} 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{{ include.fade_color }}', endColorstr='#{{ include.hover_color }}',GradientType=0 );
 
 
 	top: 0px;
