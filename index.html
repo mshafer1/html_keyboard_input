@@ -117,54 +117,55 @@
         {% assign key_names = "C,D,E,F,G,A,B" | split: "," %}
         {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
 
-        {% assign i = 0 %}
+        {% for i in (0..2) %}
 
-        <script>
-            this_keyboard = new Keyboard({{ i }})
-            keyboards.push(this_keyboard);
-        </script>
+            <script>
+                this_keyboard = new Keyboard({{ i }})
+                keyboards.push(this_keyboard);
+            </script>
 
-        <div id="keyboard{{ i }}">
-            {% for n in (2..6) %}
-            <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
-                {% for key_name in key_names %}
-                {% assign key_n = n %}
-                {% if key_name == 'A' or key_name == 'B' %}
-                {% assign key_n = n | plus: 1 %}
-                {% endif %}
-                <div class="white_key">
-                    <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
-                    <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}<span class="w3-display-bottommiddle">C{{ key_n }}</span>{% endif %}</label>
-                </div>
-                {% endfor %}
-
-                <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
-                    {% for key_name in alt_keys %}
-                    {% assign left=0 %}
-                    {% if key_name == 'C#' %}
-                    {% assign left=0.5 %}
-                    {% elsif key_name == 'F#' %}
-                    {% assign left=1.0 %}
-                    {% endif %}
-
+            <div id="keyboard{{ i }}">
+                {% for n in (2..6) %}
+                <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
+                    {% for key_name in key_names %}
                     {% assign key_n = n %}
-                    {% if key_name == 'A#' %}
+                    {% if key_name == 'A' or key_name == 'B' %}
                     {% assign key_n = n | plus: 1 %}
                     {% endif %}
-
-                    <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
+                    <div class="white_key">
                         <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
-                        <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+                        <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}<span class="w3-display-bottommiddle">C{{ key_n }}</span>{% endif %}</label>
                     </div>
                     {% endfor %}
+
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
+                        {% for key_name in alt_keys %}
+                        {% assign left=0 %}
+                        {% if key_name == 'C#' %}
+                        {% assign left=0.5 %}
+                        {% elsif key_name == 'F#' %}
+                        {% assign left=1.0 %}
+                        {% endif %}
+
+                        {% assign key_n = n %}
+                        {% if key_name == 'A#' %}
+                        {% assign key_n = n | plus: 1 %}
+                        {% endif %}
+
+                        <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
+                            <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
+                            <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <div>
-            <button class="w3-btn" type="button" onclick="reverse({{ i }})">&lt;-</button>
-            <button class="w3-btn" type="button" onclick="advance({{ i }})">-&gt;</button>
-        </div>
+            <div>
+                <button class="w3-btn" type="button" onclick="reverse({{ i }})">&lt;-</button>
+                <button class="w3-btn" type="button" onclick="advance({{ i }})">-&gt;</button>
+            </div>
+        {% endfor %}
         <button action="submit">OK</button>
     </form>
 </body>
