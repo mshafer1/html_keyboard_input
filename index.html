@@ -5,6 +5,7 @@
 
 {% assign low_keyboard = 2 %}
 {% assign high_keyboard = 6 %}
+{% assign default_keyboard = 4 %}
 
 <!DOCTYPE html>
 <html>
@@ -34,8 +35,8 @@
         class Keyboard {
             constructor(index) {
                 this.index = index;
-                this.lowest_n = 4;
-                this.highest_n = 4;
+                this.lowest_n = {{ default_keyboard }};
+                this.highest_n = {{ default_keyboard }};
             }
 
             resize() {
@@ -63,7 +64,7 @@
             advance() {
                 // console.log("Advance");
 
-                if (this.highest_n == 6) {
+                if (this.highest_n == {{ high_keyboard }}) {
                     return; // can't advance past showing 6
                 }
 
@@ -79,7 +80,7 @@
             reverse() {
                 // console.log("reverse");
 
-                if (this.lowest_n == 2) {
+                if (this.lowest_n == {{ low_keyboard }}) {
                     return; // can't lower past showing 2
                 }
 
