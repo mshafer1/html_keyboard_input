@@ -1,11 +1,52 @@
 ---
 ---
 
+{% assign hide = 'True' %}
+
 <!DOCTYPE html>
 <html>
     <head>
         <title>Keyboard Test</title>
         <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            var highest_n = 4;
+            var lowest_n = 4;
+        
+            function advance() {
+                console.log("Advance");
+                
+                if(  highest_n == 6) {
+                    return; // can't advance past showing 6
+                }
+
+                $('#part-' + lowest_n).hide();
+
+                highest_n += 1;
+                lowest_n += 1;
+
+                $('#part-' + lowest_n).show();
+                $('#part-' + highest_n).show();
+            }
+
+            function previous() {
+                console.log("previous");
+
+                if(  lowest_n == 2) {
+                    return; // can't lower past showing 2
+                }
+
+                $('#part-' + highest_n).hide();
+
+                highest_n -= 1;
+                lowest_n -= 1;
+
+                $('#part-' + lowest_n).show();
+                $('#part-' + highest_n).show();
+            }
+
+        </script>
     </head>
     <body>
         <form action="index.html" method="GET">
@@ -13,10 +54,14 @@
             {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
 
             {% for n in (2..6) %}
-            <div id="part-{{ n }}" style="background-color: #8585ff; position: relative;">
+            <div id="part-{{ n }}" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
                     {% for key_name in key_names %}
+                    {% assign key_n = n %}
+                    {% if key_name == 'A' or key_name == 'B' %}
+                        {% assign key_n = n | plus: 1 %}
+                    {% endif %}
                     <div class="white_key">
-                        <input type="checkbox" value="{{ key_name }}{{ n }}" name="keys[]" id="{{ key_name }}{{ n }}"></input><label for="{{ key_name }}{{ n }}" >{% if key_name == 'C' %}C{{ n }}{% endif %}</label>
+                        <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys[]" id="{{ key_name }}{{ key_n }}"></input><label for="{{ key_name }}{{ key_n }}" >{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
                     </div>
                     {% endfor %}
 
@@ -28,13 +73,22 @@
                             {% elsif key_name == 'F#' %}
                                 {% assign left=1.0 %}
                             {% endif %}
+
+                            {% assign key_n = n %}
+                            {% if key_name == 'A#' %}
+                                {% assign key_n = n | plus: 1 %}
+                            {% endif %}
+                            
                             <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
-                                <input type="checkbox" value="{{ key_name }}{{ n }}" name="keys[]" id="{{ key_name }}{{ n }}"></input><label for="{{ key_name }}{{ n }}" ></label>
+                                <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys[]" id="{{ key_name }}{{ key_n }}"></input><label for="{{ key_name }}{{ key_n }}" ></label>
                             </div>
                             {% endfor %}
                     </div>
             </div>
             {% endfor %}
+            <div>
+                <button class="w3-btn" type="button" onclick="previous()">&lt;-</button> <button class="w3-btn" type="button" onclick="advance()">-></button>
+            </div>
             <button action="submit">OK</button>
         </form>
     </body>
