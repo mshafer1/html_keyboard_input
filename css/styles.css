@@ -1,9 +1,9 @@
 ---
 ---
 
-body {
-	background: #555;
-}
+/* body {
+	/* background: #555;
+} */
 
 h1 {
 	color: #eee;
@@ -20,7 +20,7 @@ input[type=checkbox] {
 
 {% include key.css key_name="black_key" key_width=site.key_width key_height=site.black_height color=222 hover_color="a011" %}
 
-{% include key.css key_name="white_key" key_width=site.key_width key_height=site.white_height color="d0d0c0" hover_color="c0c0a0" checked_color="a0a080" %}
+{% include key.css key_name="white_key" key_width=site.key_width key_height=site.white_height color="dadaca" hover_color="c0c0a0" checked_color="a0a080" %}
 
 .white_key {
 	z-index: 0;

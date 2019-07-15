@@ -127,7 +127,7 @@
             <div id="keyboard{{ i }}">
                 <div style="display: inline-block">
                     {% for n in (2..6) %}
-                    <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
+                    <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
                         {% for key_name in key_names %}
                             {% assign key_n = n %}
                             {% if key_name == 'A' or key_name == 'B' %}
