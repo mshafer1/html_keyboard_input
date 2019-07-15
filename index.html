@@ -39,58 +39,58 @@
                 this.highest_n = {{ default_keyboard }};
             }
 
-        resize() {
-            console.log("Resize keyboard: " + this.index);
+            resize() {
+                console.log("Resize keyboard: " + this.index);
 
-            var host = $('#keyboard' + this.index);
-            var width = host.width();
+                var host = $('#keyboard' + this.index);
+                var width = host.width();
 
-            var max_number = Math.max(1, Math.floor((width - 150) / KEYBOARD_WIDTH));
-            // console.log(max_number);
+                var max_number = Math.max(1, Math.floor((width - 150) / KEYBOARD_WIDTH));
+                // console.log(max_number);
 
-            this.lowest_n = Math.max(this.highest_n - max_number + 1, 2);
-            this.highest_n = Math.min(this.lowest_n + max_number - 1, 6);
+                this.lowest_n = Math.max(this.highest_n - max_number + 1, 2);
+                this.highest_n = Math.min(this.lowest_n + max_number - 1, 6);
 
 
-            for (var i = {{ low_keyboard }}; i <= {{ high_keyboard }}; i++) {
-            var part = $('#part-' + this.index + '-' + i);
-            var show = i >= this.lowest_n && i <= this.highest_n;
-            // console.log(part);
-            // console.log(" show: " + show);
-            part.visible(show);
-        }
+                for (var i = {{ low_keyboard }}; i <= {{ high_keyboard }}; i++) {
+                    var part = $('#part-' + this.index + '-' + i);
+                    var show = i >= this.lowest_n && i <= this.highest_n;
+                    // console.log(part);
+                    // console.log(" show: " + show);
+                    part.visible(show);
+                }
             }
 
-        advance() {
-            // console.log("Advance");
+            advance() {
+                // console.log("Advance");
 
-            if (this.highest_n == {{ high_keyboard }}) {
-            return; // can't advance past showing 6
-        }
+                if (this.highest_n == {{ high_keyboard }}) {
+                    return; // can't advance past showing 6
+                }
 
-        $('#part-' + this.index + '-' + this.lowest_n).hide();
+                $('#part-' + this.index + '-' + this.lowest_n).hide();
 
-        this.highest_n += 1;
-        this.lowest_n += 1;
+                this.highest_n += 1;
+                this.lowest_n += 1;
 
-        $('#part-' + this.index + '-' + this.lowest_n).show();
-        $('#part-' + this.index + '-' + this.highest_n).show();
+                $('#part-' + this.index + '-' + this.lowest_n).show();
+                $('#part-' + this.index + '-' + this.highest_n).show();
             }
 
-        reverse() {
-            // console.log("reverse");
+            reverse() {
+                // console.log("reverse");
 
-            if (this.lowest_n == {{ low_keyboard }}) {
-            return; // can't lower past showing 2
-        }
+                if (this.lowest_n == {{ low_keyboard }}) {
+                    return; // can't lower past showing 2
+                }
 
-        $('#part-' + this.index + '-' + this.highest_n).hide();
+                $('#part-' + this.index + '-' + this.highest_n).hide();
 
-        this.highest_n -= 1;
-        this.lowest_n -= 1;
+                this.highest_n -= 1;
+                this.lowest_n -= 1;
 
-        $('#part-' + this.index + '-' + this.lowest_n).show();
-        $('#part-' + this.index + '-' + this.highest_n).show();
+                $('#part-' + this.index + '-' + this.lowest_n).show();
+                $('#part-' + this.index + '-' + this.highest_n).show();
             }
         }
 
@@ -119,53 +119,59 @@
         {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
 
         {% for i in (0..2) %}
+            <script>
+                this_keyboard = new Keyboard({{ i }})
+                keyboards.push(this_keyboard);
+            </script>
 
-        <script>
-            this_keyboard = new Keyboard({{ i }})
-            keyboards.push(this_keyboard);
-        </script>
+            <div id="keyboard{{ i }}">
+                <div style="display: inline-block">
+                    {% for n in (2..6) %}
+                    <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
+                        {% for key_name in key_names %}
+                            {% assign key_n = n %}
+                            {% if key_name == 'A' or key_name == 'B' %}
+                                {% assign key_n = n | plus: 1 %}
+                            {% endif %}
+                            <div class="white_key">
+                                <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
+                                <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}<span class="w3-display-bottommiddle">C{{ key_n }}</span>{% endif %}</label>
+                            </div>
+                        {% endfor %}
 
-        <div id="keyboard{{ i }}">
-            {% for n in (2..6) %}
-            <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
-                {% for key_name in key_names %}
-                {% assign key_n = n %}
-                {% if key_name == 'A' or key_name == 'B' %}
-                {% assign key_n = n | plus: 1 %}
-                {% endif %}
-                <div class="white_key">
-                    <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
-                    <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}<span class="w3-display-bottommiddle">C{{ key_n }}</span>{% endif %}</label>
-                </div>
-                {% endfor %}
+                        <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
+                            {% for key_name in alt_keys %}
+                                {% assign left=0 %}
+                                {% if key_name == 'C#' %}
+                                    {% assign left=0.5 %}
+                                {% elsif key_name == 'F#' %}
+                                    {% assign left=1.0 %}
+                                {% endif %}
 
-                <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
-                    {% for key_name in alt_keys %}
-                    {% assign left=0 %}
-                    {% if key_name == 'C#' %}
-                    {% assign left=0.5 %}
-                    {% elsif key_name == 'F#' %}
-                    {% assign left=1.0 %}
-                    {% endif %}
+                                {% assign key_n = n %}
+                                {% if key_name == 'A#' %}
+                                    {% assign key_n = n | plus: 1 %}
+                                {% endif %}
 
-                    {% assign key_n = n %}
-                    {% if key_name == 'A#' %}
-                    {% assign key_n = n | plus: 1 %}
-                    {% endif %}
-
-                    <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
-                        <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
-                        <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+                                <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
+                                    <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
+                                    <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                     {% endfor %}
+                    <div class="center">
+                            <div style="display: inline-block" >
+                                    <button class="w3-button w3-black" type="button" onclick="reverse({{ i }})">&lt;-</button>
+                                    <button class="w3-button w3-black" type="button" onclick="advance({{ i }})">-&gt;</button>
+                            </div>
+                        </div>
                 </div>
+
             </div>
-            {% endfor %}
-        </div>
-        <div>
-            <button class="w3-btn" type="button" onclick="reverse({{ i }})">&lt;-</button>
-            <button class="w3-btn" type="button" onclick="advance({{ i }})">-&gt;</button>
-        </div>
+            
+            <div>&nbsp;</div>
         {% endfor %}
         <button action="submit">OK</button>
     </form>
