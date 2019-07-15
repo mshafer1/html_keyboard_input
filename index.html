@@ -3,93 +3,170 @@
 
 {% assign hide = 'True' %}
 
+{% assign low_keyboard = 2 %}
+{% assign high_keyboard = 6 %}
+
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Keyboard Test</title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script>
-            var highest_n = 4;
-            var lowest_n = 4;
-        
-            function advance() {
-                console.log("Advance");
+<head>
+    <title>Keyboard Test</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <script>
+        // from https://stackoverflow.com/a/55372457
+        jQuery.fn.visible = function (b) {
+            if(b === undefined)
+                return this.css('display')=="none";
+            else {
+                this.css('display', b? '' : 'none');
+                return this;
+            }
+        }
+
+        var keyboards = [];
+
+        var KEYBOARD_WIDTH = {{ site.key_width | times: 7 }};
+
+        class Keyboard {
+            constructor(index) {
+                this.index = index;
+                this.lowest_n = 4;
+                this.highest_n = 4;
+            }
+
+            resize() {
+                console.log("Resize keyboard: " + this.index);
+
+                var host = $('#keyboard' + this.index);
+                var width = host.width();
+
+                var max_number = Math.max(1, Math.floor((width - 150) / KEYBOARD_WIDTH));
+                // console.log(max_number);
+
+                this.lowest_n = Math.max(this.highest_n - max_number + 1, 2);
+                this.highest_n = Math.min(this.lowest_n + max_number - 1, 6);
                 
-                if(  highest_n == 6) {
+
+                for(var i = {{ low_keyboard }}; i <= {{ high_keyboard }}; i++) {
+                    var part = $('#part-' + this.index + '-' + i);
+                    var show = i >= this.lowest_n && i <= this.highest_n;
+                    // console.log(part);
+                    // console.log(" show: " + show);
+                    part.visible(show);
+                }
+            }
+
+            advance() {
+                // console.log("Advance");
+
+                if (this.highest_n == 6) {
                     return; // can't advance past showing 6
                 }
 
-                $('#part-' + lowest_n).hide();
+                $('#part-' + this.index + '-' + this.lowest_n).hide();
 
-                highest_n += 1;
-                lowest_n += 1;
+                this.highest_n += 1;
+                this.lowest_n += 1;
 
-                $('#part-' + lowest_n).show();
-                $('#part-' + highest_n).show();
+                $('#part-' + this.index + '-' + this.lowest_n).show();
+                $('#part-' + this.index + '-' + this.highest_n).show();
             }
 
-            function previous() {
-                console.log("previous");
+            reverse() {
+                // console.log("reverse");
 
-                if(  lowest_n == 2) {
+                if (this.lowest_n == 2) {
                     return; // can't lower past showing 2
                 }
 
-                $('#part-' + highest_n).hide();
+                $('#part-' + this.index + '-' + this.highest_n).hide();
 
-                highest_n -= 1;
-                lowest_n -= 1;
+                this.highest_n -= 1;
+                this.lowest_n -= 1;
 
-                $('#part-' + lowest_n).show();
-                $('#part-' + highest_n).show();
+                $('#part-' + this.index + '-' + this.lowest_n).show();
+                $('#part-' + this.index + '-' + this.highest_n).show();
             }
+        }
 
+        function advance(index) {
+            keyboards[index].advance();
+        }
+
+        function reverse(index) {
+            keyboards[index].reverse();
+        }
+
+        function resize() {
+            keyboards.forEach(function(keyboard) {
+                keyboard.resize();
+            })
+        }
+
+        $(window).resize(resize);
+        $(window).ready(resize);
+    </script>
+</head>
+
+<body>
+    <form action="index.html" method="GET">
+        {% assign key_names = "C,D,E,F,G,A,B" | split: "," %}
+        {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
+
+        {% assign i = 0 %}
+
+        <script>
+            this_keyboard = new Keyboard({{ i }})
+            keyboards.push(this_keyboard);
         </script>
-    </head>
-    <body>
-        <form action="index.html" method="GET">
-            {% assign key_names = "C,D,E,F,G,A,B" | split: "," %}
-            {% assign alt_keys = "C#,D#,F#,G#,A#" | split: "," %}
 
+        <div id="keyboard{{ i }}">
             {% for n in (2..6) %}
-            <div id="part-{{ n }}" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
-                    {% for key_name in key_names %}
-                    {% assign key_n = n %}
-                    {% if key_name == 'A' or key_name == 'B' %}
-                        {% assign key_n = n | plus: 1 %}
+            <div id="part-{{ i}}-{{ n }}" class="keyboardPart" style="background-color: #8585ff; position: relative; {% if n != 4 and hide == 'True' %}display: none;{% endif %}">
+                {% for key_name in key_names %}
+                {% assign key_n = n %}
+                {% if key_name == 'A' or key_name == 'B' %}
+                {% assign key_n = n | plus: 1 %}
+                {% endif %}
+                <div class="white_key">
+                    <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
+                    <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}<span class="w3-display-bottommiddle">C{{ key_n }}</span>{% endif %}</label>
+                </div>
+                {% endfor %}
+
+                <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
+                    {% for key_name in alt_keys %}
+                    {% assign left=0 %}
+                    {% if key_name == 'C#' %}
+                    {% assign left=0.5 %}
+                    {% elsif key_name == 'F#' %}
+                    {% assign left=1.0 %}
                     {% endif %}
-                    <div class="white_key">
-                        <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys[]" id="{{ key_name }}{{ key_n }}"></input><label for="{{ key_name }}{{ key_n }}" >{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+
+                    {% assign key_n = n %}
+                    {% if key_name == 'A#' %}
+                    {% assign key_n = n | plus: 1 %}
+                    {% endif %}
+
+                    <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
+                        <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
+                        <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
                     </div>
                     {% endfor %}
-
-                    <div style="position: absolute; left: 0px; top: 0px; z-index: 1; ">
-                            {% for key_name in alt_keys %}
-                            {% assign left=0 %}
-                            {% if key_name == 'C#' %}
-                                {% assign left=0.5 %}
-                            {% elsif key_name == 'F#' %}
-                                {% assign left=1.0 %}
-                            {% endif %}
-
-                            {% assign key_n = n %}
-                            {% if key_name == 'A#' %}
-                                {% assign key_n = n | plus: 1 %}
-                            {% endif %}
-                            
-                            <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
-                                <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys[]" id="{{ key_name }}{{ key_n }}"></input><label for="{{ key_name }}{{ key_n }}" ></label>
-                            </div>
-                            {% endfor %}
-                    </div>
+                </div>
             </div>
             {% endfor %}
-            <div>
-                <button class="w3-btn" type="button" onclick="previous()">&lt;-</button> <button class="w3-btn" type="button" onclick="advance()">-></button>
-            </div>
-            <button action="submit">OK</button>
-        </form>
-    </body>
+        </div>
+        <div>
+            <button class="w3-btn" type="button" onclick="reverse({{ i }})">&lt;-</button>
+            <button class="w3-btn" type="button" onclick="advance({{ i }})">-&gt;</button>
+        </div>
+        <button action="submit">OK</button>
+    </form>
+</body>
+
 </html>
