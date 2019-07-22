@@ -153,9 +153,15 @@
                                     {% assign key_n = n | plus: 1 %}
                                 {% endif %}
 
-                                <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px;">
-                                    <input type="checkbox" value="{{ key_name }}{{ key_n }}" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}"></input>
-                                    <label for="{{ key_name }}{{ i }}-{{ key_n }}">{% if key_name == 'C' %}C{{ key_n }}{% endif %}</label>
+                                <div class="black_key" style="margin-left: {{ left | times: site.key_width }}px; position: relative;">
+                                    <div style="display:block; height:{{ site.black_height }}px; position:relative; background: #000;">
+                                        <input type="checkbox" value="{{ key_name }}{{ key_n }}#" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}#"></input>
+                                        <label for="{{ key_name }}{{ i }}-{{ key_n }}#"><span class="w3-display-middle">#</span></label>
+                                    </div>
+                                    <div style="display:block; height:{{ site.black_height }}px; position:relative; top: -1px; background: #000;">
+                                        <input type="checkbox" value="{{ key_name }}{{ key_n }}b" name="keys{{ i }}[]" id="{{ key_name }}{{ i }}-{{ key_n }}b"></input>
+                                        <label for="{{ key_name }}{{ i }}-{{ key_n }}b"><span class="w3-display-middle">&#9837;</span></label>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
